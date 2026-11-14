@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="METHABALANCE Teknisi — Kontrol SCADA, Pipa & Katup TPAS Manggar">
+  <title>METHABALANCE Teknisi • SCADA &amp; Kontrol Katup</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/vendor/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="mobile-app-shell">
+
+    <!-- MINIMALIST HEADER -->
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="header-brand">
+          <span class="brand-title">METHABALANCE</span>
+          <span class="brand-role-text">TEKNISI</span>
+        </div>
+
+        <div class="header-controls">
+          <span class="header-weather-pill" title="Cuaca TPAS Manggar: Cerah Berawan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" width="14" height="14">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            </svg>
+            <span class="tabular-nums">29&deg;C</span>
+          </span>
+
+          <button class="header-icon-btn" id="btnHeaderSearch" type="button" aria-label="Cari">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </button>
+
+          <span class="header-avatar-btn" title="Teknisi Lapangan">AP</span>
+        </div>
+      </div>
+
+      <div class="header-search-bar" id="headerSearchBar">
+        <input class="form-input" id="headerSearchInput" type="search" placeholder="Cari pelanggan, ID SR/UMKM, atau RT...">
+      </div>
+    </header>
+
+    <main class="app-content">
+
+      <!-- ===============================================================
+           TAB 1: SCADA & PETA GIS KATUP
+           =============================================================== -->
+      <section class="tab-pane active" id="tab-scada" role="tabpanel">
+
+        <div class="section-header-bar">
+          <div>
+            <div class="section-title">Kontrol SCADA &amp; Peta GIS</div>
+            <div class="section-sub">Hulu-Hilir 124,5 Nm&sup3;/h &middot; 380 SR &amp; 29 UMKM</div>
+          </div>
+          <span class="status-chip" id="techClosedChip">2 Tertutup</span>
+        </div>
+
+        <!-- Animated Leak Warning (Teknisi: Lengkap dengan Lokasi) -->
+        <div class="leak-warning-card" id="techLeakBanner">
+          <div class="leak-top-row">
+            <div class="leak-title-wrap">
+              <span class="leak-radar-dot" aria-hidden="true"></span>
+              <span class="leak-title">Peringatan Kebocoran Gas</span>
+            </div>
+            <span class="leak-pct-pill tabular-nums" id="techLeakPct">18%</span>
+          </div>
+          <div class="leak-desc" id="techLeakLoc">
+            Lokasi dugaan: <strong>Sekitar Node-03 Poros RT 23 (Zona 2)</strong> &middot; Terdeteksi penurunan tekanan &amp; lonjakan aliran.
+          </div>
+          <div class="leak-bar-track">
+            <div class="leak-bar-fill" id="techLeakBar" style="width:18%;"></div>
+          </div>
+          <div class="leak-actions">
+            <button class="leak-btn primary" id="btnFocusLeakMap" type="button">Lihat Lokasi di Peta</button>
+            <button class="leak-btn" id="btnClearLeak" type="button">Tandai Aman</button>
+          </div>
+        </div>
+
+        <!-- Curved Gauge Metrics -->
+        <div class="metrics-grid">
+          <div class="gauge-card theme-emerald">
+            <div class="gauge-head">
+              <span class="gauge-label">Aliran Hulu</span>
+              <span class="gauge-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <path d="M12 15a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                  <path d="m13.4 11.6 3.6-3.6"/>
+                  <path d="M5.6 18.4A9 9 0 1 1 18.4 18.4"/>
+                </svg>
+              </span>
+            </div>
+            <svg class="gauge-arc-svg" viewBox="0 0 112 62" aria-hidden="true">
+              <path d="M 12 54 A 44 44 0 0 1 100 54" fill="none" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+              <path d="M 12 54 A 44 44 0 0 1 100 54" fill="none" stroke="#059669" stroke-width="8" stroke-linecap="round" stroke-dasharray="138.23" stroke-dashoffset="22.1"/>
+            </svg>
+            <div class="gauge-val tabular-nums">124,5 <small>Nm&sup3;/h</small></div>
+            <span class="gauge-cond">Kondisi Prima</span>
+          </div>
+
+          <div class="gauge-card theme-blue">
+            <div class="gauge-head">
+              <span class="gauge-label">Katup Terbuka</span>
+              <span class="gauge-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M9 12l2 2 4-4"/>
+                </svg>
+              </span>
+            </div>
+            <svg class="gauge-arc-svg" viewBox="0 0 112 62" aria-hidden="true">
+              <path d="M 12 54 A 44 44 0 0 1 100 54" fill="none" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+              <path id="techOpenArc" d="M 12 54 A 44 44 0 0 1 100 54" fill="none" stroke="#2563eb" stroke-width="8" stroke-linecap="round" stroke-dasharray="138.23" stroke-dashoffset="55.3"/>
+            </svg>
+            <div class="gauge-val tabular-nums"><span id="scadaOpenCount">3</span> <small>/ 5 (<span id="scadaOpenPct">60</span>%)</small></div>
+            <span class="gauge-cond" id="scadaClosedNote">2 Terisolasi</span>
+          </div>
+        </div>
+
+        <!-- Neraca Massa Hulu-Hilir -->
+        <div class="card">
+          <div class="card-top-row" style="margin-bottom:8px;">
+            <span class="card-label">Neraca Massa Gas (Hulu &ndash; Hilir)</span>
+            <span class="text-ok-sm">Susut 5,0%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;">
+            <div>
+              <div style="font-size:0.7rem;color:var(--text-muted);">Hulu</div>
+              <div class="tabular-nums" style="font-weight:700;font-size:0.95rem;">124,5 <small style="font-weight:500;color:var(--text-muted);">Nm&sup3;</small></div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--text-muted);">Hilir</div>
+              <div class="tabular-nums" style="font-weight:700;font-size:0.95rem;color:var(--emerald-deep);">118,2 <small style="font-weight:500;">Nm&sup3;</small></div>
+            </div>
+            <div>
+              <div style="font-size:0.7rem;color:var(--text-muted);">Kualitas</div>
+              <div class="tabular-nums" style="font-weight:700;font-size:0.95rem;">58,2% <small style="font-weight:500;color:var(--text-muted);">CH&#8324;</small></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Peta GIS Interaktif & Aktuator Katup -->
+        <div class="card gis-card">
+          <div class="card-top-row" style="margin-bottom:0;">
+            <span class="card-label">Peta GIS &amp; Aktuator Katup (1–5)</span>
+          </div>
+
+          <div class="gis-filter-row">
+            <button class="chip-btn active" id="techFilterAll" type="button">Semua (5)</button>
+            <button class="chip-btn" id="techFilterOpen" type="button">Terbuka (<span id="techCountOpen">3</span>)</button>
+            <button class="chip-btn danger" id="techFilterClosed" type="button">Tertutup (<span id="techCountClosed">2</span>)</button>
+          </div>
+
+          <div class="gis-map-frame">
+            <div id="techGisMap" class="gis-map-inner" role="region" aria-label="Peta GIS Kontrol Katup Teknisi"></div>
+          </div>
+
+          <div class="gis-legend-bar">
+            <span class="legend-pair"><span class="line-pipe"></span> Pipa Biogas</span>
+            <span class="legend-pair"><span class="dot-open"></span> Terbuka</span>
+            <span class="legend-pair"><span class="dot-closed"></span> Tertutup</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===============================================================
+           TAB 2: PIPA, KATUP & SIPHON WATER-TRAP
+           =============================================================== -->
+      <section class="tab-pane" id="tab-pipa" role="tabpanel">
+
+        <div class="card" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="card-label">Kendali Cepat Jaringan Cabang</div>
+          <div class="quick-actions-row">
+            <button class="action-btn action-btn-danger" id="btnEmergencyAllBranches" type="button">Isolasi Cabang</button>
+            <button class="action-btn action-btn-reopen" id="btnRestoreAllBranches" type="button">Buka Semua</button>
+          </div>
+        </div>
+
+        <div class="card row-card">
+          <div>
+            <div class="row-card-title">Siphon &amp; Water-Trap</div>
+            <div class="row-card-sub" id="siphonStatusText">Terakhir dikuras: 10 Nov 2026</div>
+          </div>
+          <button class="chip-btn active" id="btnDrainSiphon" type="button">Catat Kuras</button>
+        </div>
+
+        <div class="section-header-bar" style="padding-top:4px;">
+          <div class="section-title">Katup Motorik SS304 (1–5)</div>
+        </div>
+
+        <div class="valve-list" id="techValveList"></div>
+
+      </section>
+
+      <!-- ===============================================================
+           TAB 3: PELANGGAN (380 SR & 29 UMKM)
+           =============================================================== -->
+      <section class="tab-pane" id="tab-pelanggan" role="tabpanel">
+
+        <div class="section-header-bar">
+          <div>
+            <div class="section-title">Data Pelanggan</div>
+            <div class="section-sub">380 Sambungan Rumah &amp; 29 UMKM</div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:12px;display:flex;flex-direction:column;gap:10px;">
+          <input class="form-input" id="custSearchInput" type="search" placeholder="Cari nama, ID SR/UMKM, atau RT...">
+          <div class="gis-filter-row">
+            <button class="chip-btn active" data-cust-filter="ALL" type="button">Semua</button>
+            <button class="chip-btn" data-cust-filter="Rumah Tangga" type="button">Warga</button>
+            <button class="chip-btn" data-cust-filter="UMKM" type="button">UMKM</button>
+            <button class="chip-btn danger" data-cust-filter="UNPAID" type="button">Belum Bayar</button>
+          </div>
+        </div>
+
+        <div class="valve-list" id="techCustomerList"></div>
+
+      </section>
+
+      <!-- ===============================================================
+           TAB 4: TIKET LAPORAN LAPANGAN
+           =============================================================== -->
+      <section class="tab-pane" id="tab-tiket" role="tabpanel">
+
+        <div class="section-header-bar">
+          <div>
+            <div class="section-title">Tiket Pengaduan Warga</div>
+            <div class="section-sub" id="scadaTicketSub">1 tiket aktif menunggu penanganan</div>
+          </div>
+        </div>
+
+        <div class="gis-filter-row">
+          <button class="chip-btn active" data-ticket-filter="ALL" type="button">Semua</button>
+          <button class="chip-btn danger" data-ticket-filter="ACTIVE" type="button">Aktif</button>
+          <button class="chip-btn" data-ticket-filter="DONE" type="button">Selesai</button>
+        </div>
+
+        <div class="card">
+          <div class="reports-history-list" id="techTicketsList"></div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- BOTTOM NAVIGATION (4 TABS) -->
+    <nav class="bottom-nav" style="grid-template-columns:repeat(4,1fr);" aria-label="Navigasi Teknisi">
+      <button class="nav-tab-btn active" type="button" data-tab="tab-scada">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+          <line x1="8" y1="2" x2="8" y2="18"/>
+          <line x1="16" y1="6" x2="16" y2="22"/>
+        </svg>
+        <span>SCADA</span>
+      </button>
+
+      <button class="nav-tab-btn" type="button" data-tab="tab-pipa">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 8v8M8 12h8"/>
+        </svg>
+        <span>Pipa &amp; Katup</span>
+      </button>
+
+      <button class="nav-tab-btn" type="button" data-tab="tab-pelanggan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span>Pelanggan</span>
+      </button>
+
+      <button class="nav-tab-btn" type="button" data-tab="tab-tiket">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <span>Tiket</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- MODAL: KONTROL KATUP MOTORIK -->
+  <div class="modal-backdrop" id="techValveModal">
+    <div class="modal-sheet" role="dialog" aria-labelledby="techValveModalTitle">
+      <div class="modal-sheet-header">
+        <div class="modal-sheet-title" id="techValveModalTitle">Kontrol Katup</div>
+        <button class="modal-close-btn" id="btnCloseTechValveModal" type="button" aria-label="Tutup">&times;</button>
+      </div>
+
+      <div class="kv-list" id="techValveInfo"></div>
+
+      <div class="form-field" id="techReasonField">
+        <label class="form-label" for="techValveReason">Catatan Penutupan (opsional)</label>
+        <input class="form-input" id="techValveReason" type="text" placeholder="Contoh: Pemeliharaan pipa atau cek kebocoran">
+      </div>
+
+      <div class="modal-actions-row">
+        <button class="btn-secondary" id="btnCancelTechValve" type="button">Batal</button>
+        <button class="btn-primary" id="btnToggleTechValve" type="button">Tutup Katup</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-notice" id="appToast">
+    <span id="toastMessage">Tersimpan.</span>
+  </div>
+
+  <script src="assets/vendor/leaflet.js"></script>
+  <script src="tech-data.js"></script>
+  <script src="gis-map.js"></script>
+  <script src="tech-app.js"></script>
+</body>
+</html>
